@@ -1,49 +1,50 @@
-const button = document.getElementById("enter");
-const input = document.getElementById("userinput");
-const ul = document.querySelector("ul");
-const list = document.querySelectorAll("li");
+var button = document.getElementById('enter');
+var input = document.getElementById('userinput');
+var unorderedlist = document.querySelector('ul');
 
 function inputLength() {
-  return input.value.length;
+    return input.value.length;
 }
 
 function createListElement() {
-  const li = document.createElement("li");
-  li.appendChild(document.createTextNode(input.value));
-  ul.appendChild(li);
-  input.value = "";
-  const deleteBtn = deleteElement(li);
-  li.appendChild(deleteBtn);
-}
-
-function deleteElement() {
-  const deleteBtn = document.createElement("button");
-  deleteBtn.appendChild(document.createTextNode("Delete"));
-  deleteBtn.addEventListener("click", () => li.remove());
-  return deleteBtn;
+    var li = document.createElement('li');
+    li.appendChild(document.createTextNode(input.value));
+    decorateListItem(li);
+    unorderedlist.appendChild(li);
+    input.value = '';
 }
 
 function addListAfterClick() {
-  if (inputLength() > 0) {
-    createListElement();
-  }
+    if (inputLength() > 0) {
+        createListElement();
+    }
 }
 
-function addListAfterKeypress(event) {
-  if (inputLength() > 0 && event.keyCode === 13) {
-    createListElement();
-  }
+function addListAfterKeyPress(event) {
+    if (inputLength() > 0 && event.keyCode === 13) {
+        createListElement();
+    }
 }
 
-function toggle() {
-  this.classList.toggle("done");
+function decorateListItem(listItem) {
+    var deleteButton = document.createElement('button');
+    deleteButton.innerText = "delete";
+    deleteButton.addEventListener('click', function () {
+        unorderedlist.removeChild(listItem);
+    });
+    listItem.addEventListener('click', function () {
+        this.classList.toggle('done');
+    });
+    listItem.appendChild(deleteButton);
 }
 
 
-button.addEventListener("click", addListAfterClick);
+const listAsArray = Array.from(unorderedlist.querySelectorAll('li'));
 
-input.addEventListener("keypress", addListAfterKeypress);
-
-list.forEach(function (item) {
-  item.addEventListener("click", toggle);
+listAsArray.forEach(node => {
+    decorateListItem(node);
 });
+
+button.addEventListener('click', addListAfterClick);
+
+input.addEventListener('keypress', addListAfterKeyPress);
